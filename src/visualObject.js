@@ -20,13 +20,18 @@ function multmatvec(mat, vec)
 }
 
 class VisualObject {
-    constructor(gl, vertices, color, type = null, mode = "default") {
+    constructor(gl, vertices, normalsOrColor, texCoords = null, type = null, mode = "default") {
+        // Backward compatibility: if texCoords is null, assume old 2D constructor
+        const is3D = texCoords !== null;
+
         if (!type)
             type = gl.TRIANGLES
 
         this.type = type;
         this.mode = mode;
+        this.gl = gl;
 
+        // Position data
         this.vertices = vertices;
         this.count = vertices.length;
         this.modelMatrix = mat4();
@@ -35,8 +40,49 @@ class VisualObject {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, flatten(this.vertices), gl.STATIC_DRAW);
 
-        this.color = color;
-        this.gl = gl;
+        if (is3D) {
+            // 3D mode: second parameter is normals, third is texCoords
+            this.normals = normalsOrColor;
+            this.texCoords = texCoords;
+
+            // Create normal buffer
+            this.normalBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, flatten(this.normals), gl.STATIC_DRAW);
+
+            // Create texture coordinate buffer
+            this.texCoordBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, flatten(this.texCoords), gl.STATIC_DRAW);
+
+            // Default material properties (Blinn-Phong)
+            this.material = {
+                ambient: vec3(0.2, 0.2, 0.2),
+                diffuse: vec3(0.8, 0.8, 0.8),
+                specular: vec3(1.0, 1.0, 1.0),
+                shininess: 32.0
+            };
+
+            // Texture properties
+            this.hasTexture = false;
+            this.textureId = null;
+
+            // Light object flag
+            this.isLight = false;
+
+            this.color = null; // Not used in 3D mode
+        } else {
+            // 2D mode: second parameter is color
+            this.color = normalsOrColor;
+            this.normals = null;
+            this.texCoords = null;
+            this.normalBuffer = null;
+            this.texCoordBuffer = null;
+            this.material = null;
+            this.hasTexture = false;
+            this.textureId = null;
+            this.isLight = false;
+        }
     }
 
     applyTranslation(x, y) 
@@ -95,10 +141,22 @@ class VisualObject {
         this.color = color;
     }
 
-    updateBuffers() 
+    updateBuffers()
     {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, flatten(this.vertices), this.gl.STATIC_DRAW);
+
+        // Update normal buffer if it exists (3D mode)
+        if (this.normalBuffer && this.normals) {
+            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normalBuffer);
+            this.gl.bufferData(this.gl.ARRAY_BUFFER, flatten(this.normals), this.gl.STATIC_DRAW);
+        }
+
+        // Update texture coordinate buffer if it exists (3D mode)
+        if (this.texCoordBuffer && this.texCoords) {
+            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.texCoordBuffer);
+            this.gl.bufferData(this.gl.ARRAY_BUFFER, flatten(this.texCoords), this.gl.STATIC_DRAW);
+        }
     }
 
     finishFreeDraw()
