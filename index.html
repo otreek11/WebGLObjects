@@ -103,6 +103,7 @@
             border-radius: 3px;
             background: #e0e0e0;
             outline: none;
+            appearance: none;
             -webkit-appearance: none;
         }
 
@@ -251,13 +252,21 @@
     <script type="text/javascript" src="./Common/MV.js"></script>
 
     <!-- Application Scripts -->
-    <script type="text/javascript" src="src/geometry.js"></script>
+    <!-- <script type="text/javascript" src="src/geometry.js"></script>
     <script type="text/javascript" src="src/lights.js"></script>
-    <script type="text/javascript" src="src/animation.js"></script>
     <script type="text/javascript" src="src/textureLoader.js"></script>
     <script type="text/javascript" src="src/visualObject.js"></script>
     <script type="text/javascript" src="src/renderer.js"></script>
-    <script type="text/javascript" src="src/main.js"></script>
+    <script type="text/javascript" src="src/main.js"></script> -->
+    
+    <script type="text/javascript" src="src/Obj3D.js"></script>
+    <script type="text/javascript" src="src/Camera3D.js"></script>
+    <script type="text/javascript" src="src/Renderer3D.js"></script>
+    <script type="text/javascript" src="src/inputHandler.js"></script>
+    <script type="text/javascript" src="src/DefaultObjects.js"></script>
+    <script type="text/javascript" src="src/animation.js"></script>
+    <script type="text/javascript" src="src/Light3D.js"></script>
+    <script type="text/javascript" src="src/tempmain.js"></script>
 </head>
 
 <body>
@@ -297,8 +306,8 @@
                 <label>
                     Plano Distante (Far)
                     <div class="slider-container">
-                        <input type="range" id="farSlider" min="10" max="200" value="100" step="5">
-                        <span class="value-display" id="farValue">100</span>
+                        <input type="range" id="farSlider" min="1" max="50" value="20" step="1">
+                        <span class="value-display" id="farValue">20</span>
                     </div>
                 </label>
             </div>
@@ -330,7 +339,7 @@
                     </div>
                 </label>
 
-                <button onclick="resetCamera()">Resetar Câmera</button>
+                <button id="camReset">Resetar Câmera</button>
             </div>
 
             <div class="control-group">

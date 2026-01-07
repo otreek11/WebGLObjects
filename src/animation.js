@@ -68,10 +68,7 @@ class Animation {
         const axis = this.params.axis || vec3(0, 1, 0);
 
         // Apply rotation
-        this.object.modelMatrix = mult(
-            rotate(angle, axis),
-            this.object.modelMatrix
-        );
+        this.object.rotate(angle, axis);
     }
 
     /**
@@ -80,29 +77,11 @@ class Animation {
      */
     updateOrbit(deltaTime) {
         const center = this.params.center || vec3(0, 0, 0);
-        const radius = this.params.radius || 5.0;
         const speed = this.params.speed || 1.0;
-        const heightOffset = this.params.heightOffset || 0;
+        const axis = this.params.axis || vec3(0, 1, 0)
 
-        // Update angle
-        this.orbitAngle += speed * deltaTime;
 
-        // Calculate new position
-        const x = center[0] + radius * Math.cos(this.orbitAngle);
-        const y = center[1] + heightOffset;
-        const z = center[2] + radius * Math.sin(this.orbitAngle);
-
-        // Reset to initial orientation and apply new position
-        this.object.modelMatrix = translate(x, y, z);
-
-        // Optional: rotate to face movement direction
-        if (this.params.faceDirection) {
-            const rotAngle = (this.orbitAngle * 180 / Math.PI) + 90;
-            this.object.modelMatrix = mult(
-                this.object.modelMatrix,
-                rotate(rotAngle, vec3(0, 1, 0))
-            );
-        }
+        this.object.rotate(speed * deltaTime, axis, center);
     }
 
     /**
@@ -118,10 +97,7 @@ class Animation {
         const scaleFactor = baseScale + amplitude * Math.sin(this.time * frequency * 2 * Math.PI);
 
         // Apply scale to initial matrix
-        this.object.modelMatrix = mult(
-            this.initialMatrix,
-            scalem(scaleFactor, scaleFactor, scaleFactor)
-        );
+        this.object.scale(scaleFactor);
     }
 
     /**
@@ -137,10 +113,7 @@ class Animation {
         const offset = amplitude * Math.sin(this.time * frequency * 2 * Math.PI);
 
         // Apply translation to initial matrix
-        this.object.modelMatrix = mult(
-            translate(axis[0] * offset, axis[1] * offset, axis[2] * offset),
-            this.initialMatrix
-        );
+        this.object.translate(scale(offset, axis));
     }
 
     /**
