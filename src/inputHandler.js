@@ -45,12 +45,12 @@ class InputHandler
         document.getElementById('nearValue').textContent = '0.1';
         document.getElementById('farSlider').value = 20;
         document.getElementById('farValue').textContent = '20';
-        document.getElementById('radiusSlider').value = 10;
-        document.getElementById('radiusValue').textContent = '10';
-        document.getElementById('thetaSlider').value = 45;
-        document.getElementById('thetaValue').textContent = '45';
-        document.getElementById('phiSlider').value = 30;
-        document.getElementById('phiValue').textContent = '30';
+        document.getElementById('aspectSlider').value = 1.33;
+        document.getElementById('aspectValue').textContent = '1.33';
+        this.renderer.setFov(45);
+        this.renderer.setNear(0.1);
+        this.renderer.setFar(20);
+        this.renderer.setAspect(1.33);
     }
 
     _setupCameraControls() {
@@ -96,6 +96,17 @@ class InputHandler
                 const speed = parseFloat(e.target.value);
                 this.animationHandler.setSpeedMultiplier(speed);
                 speedValue.textContent = speed.toFixed(1);
+            });
+        }
+
+        // Aspect control
+        const aspectSlider = document.getElementById('aspectSlider');
+        const aspectValue = document.getElementById('aspectValue');
+        if (aspectSlider) {
+            aspectSlider.addEventListener('input', (e) => {
+                const aspect = parseFloat(e.target.value);
+                renderer.setAspect(aspect);
+                aspectValue.textContent = aspect.toFixed(2);
             });
         }
 

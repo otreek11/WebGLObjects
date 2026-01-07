@@ -55,7 +55,7 @@ const locations = {
 
 const shaders = {
     vertex: "shaders/sh_vrtx.shader",
-    fragment: "shaders/simple_frag.shader",
+    fragment: "shaders/sh_frag.shader",
 }
 
 let ih;
