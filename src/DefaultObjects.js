@@ -37,7 +37,7 @@ function createCubeData() {
     return { 
         vertices: new Float32Array(v), 
         normals: new Float32Array(n), 
-        texCoords: new Float32Array(t), // <--- Retorna texCoords
+        texCoords: new Float32Array(t),
         indices: new Uint16Array(i) 
     };
 }

@@ -68,8 +68,8 @@ class Renderer3D {
             gl.enableVertexAttribArray(this.locations.aNormal);
 
             gl.bindBuffer(gl.ARRAY_BUFFER, obj.texVbo);
-        gl.vertexAttribPointer(this.locations.aTexCoord, 2, gl.FLOAT, false, 0, 0); // Note o '2' (u,v)
-        gl.enableVertexAttribArray(this.locations.aTexCoord);
+            gl.vertexAttribPointer(this.locations.aTexCoord, 2, gl.FLOAT, false, 0, 0); // Note o '2' (u,v)
+            gl.enableVertexAttribArray(this.locations.aTexCoord);
 
             // envia matriz modelo
             gl.uniformMatrix4fv(this.locations.uModel, false, flatten(obj.modelMatrix));
