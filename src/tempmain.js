@@ -49,6 +49,8 @@ const locations = {
     'uMaterial.diffuse': null,
     'uMaterial.specular': null,
     'uMaterial.shininess': null,
+    uTexture: null,
+    uHasTexture: null,
 };
 
 const shaders = {
@@ -60,8 +62,12 @@ let ih;
 let cubeObj, sphereObj, pyramidObj, cylinderObj;
 let animManager;
 let lightHandler;
+let textureLoader;
 
 function initObjects(gl) {
+
+    let crateTex = textureLoader.loadTexture("Test", './textures/wood.jpg');
+
     let cubeD = createCubeData();
     cubeObj = new Obj3D(
         gl, 
@@ -75,6 +81,8 @@ function initObjects(gl) {
         10.0,
         vec4(1, 1, 1, 1)
     );
+
+    cubeObj.texture = crateTex;
 
     let sphereD = createSphereData(0.7, 30, 30);
     sphereObj = new Obj3D(
@@ -134,6 +142,8 @@ window.onload = function init() {
     gl.useProgram(program);
     
     initLocations(program);
+
+    textureLoader = new TextureLoader(gl);
     initObjects(gl);
 
     const objects = [cubeObj, sphereObj, pyramidObj, cylinderObj];

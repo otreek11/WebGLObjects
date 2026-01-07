@@ -20,7 +20,7 @@ class TextureLoader {
      * @param {function} callback - Optional callback function when texture is loaded
      * @returns {WebGLTexture} Texture object (may not be loaded yet)
      */
-    loadTexture(name, url, callback) {
+    loadTexture(name, url, callback = null) {
         const gl = this.gl;
         const texture = gl.createTexture();
         const image = new Image();

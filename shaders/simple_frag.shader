@@ -13,6 +13,9 @@ struct Light {
     vec4 color;
 };
 
+uniform sampler2D uTexture;
+uniform int uHasTexture;
+
 uniform Light uLights[2];
 uniform int uIsLightSource;
 
@@ -25,14 +28,14 @@ struct Material {
 
 uniform Material uMaterial;
 
-vec3 calculateBlinnPhongLight(Light light, vec3 normal, vec3 viewDir) {
+vec3 calculateBlinnPhongLight(Light light, vec3 normal, vec3 viewDir, vec3 baseColor) {
 
     vec3 lightColor = light.color.rgb;
-    vec3 ambient = uMaterial.ambient * lightColor;
+    vec3 ambient = uMaterial.ambient * lightColor * baseColor;
 
     vec3 lightDir = normalize(light.position.xyz - vFragPos);
     float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuse = diff * uMaterial.diffuse * lightColor;
+    vec3 diffuse = diff * baseColor * lightColor;
 
     vec3 halfDir = normalize(lightDir + viewDir);
     float spec = pow(max(dot(normal, halfDir), 0.0), uMaterial.shininess);
@@ -48,13 +51,20 @@ void main() {
         return;
     }
 
+    vec4 texColor = vec4(1.0, 1.0, 1.0, 1.0);
+    if (uHasTexture == 1) {
+        texColor = texture2D(uTexture, vTexCoord);
+    }
+
+    vec3 baseColor = (uHasTexture == 1) ? texColor.rgb : uMaterial.diffuse;
+
     vec3 lighting = vec3(0.0);
     
     vec3 norm = normalize(vNormal);
     vec3 viewDir = normalize(uViewPos - vFragPos);
 
     for (int i = 0; i < 2; i++) {
-        lighting += calculateBlinnPhongLight(uLights[i], norm, viewDir);
+        lighting += calculateBlinnPhongLight(uLights[i], norm, viewDir, baseColor);
     }
 
     vec3 finalColor = lighting * uColor.rgb;

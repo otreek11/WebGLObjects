@@ -71,6 +71,15 @@ class Renderer3D {
             gl.vertexAttribPointer(this.locations.aTexCoord, 2, gl.FLOAT, false, 0, 0); // Note o '2' (u,v)
             gl.enableVertexAttribArray(this.locations.aTexCoord);
 
+            if (obj.texture) {
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, obj.texture);
+                gl.uniform1i(this.locations.uTexture, 0);
+                gl.uniform1i(this.locations.uHasTexture, 1);
+            } else {
+                gl.uniform1i(this.locations.uHasTexture, 0);
+            }
+
             // envia matriz modelo
             gl.uniformMatrix4fv(this.locations.uModel, false, flatten(obj.modelMatrix));
 
