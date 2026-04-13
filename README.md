@@ -3,9 +3,10 @@ Um programa feito em WebGL manipular objetos 3D, incluindo sua textura, ilumina�
 
 # Controles
 Os controles de Projeção/Animação estão presentes no HTML
-Para movimentar a câmera: WASD
-Para olhar em volta: IJKL
+
+- Para movimentar a câmera: WASD
+- Para olhar em volta: IJKL
 
 # Autores
-João Guilherme Raposo Lobato
-Marcelo Albuquerque Heluy
+- João Guilherme Raposo Lobato
+- Marcelo Albuquerque Heluy
